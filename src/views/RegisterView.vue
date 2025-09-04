@@ -152,7 +152,6 @@ const handleFacebookSignup = () => {
         class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-br from-blue-100/10 to-indigo-100/10 rounded-full blur-3xl"
       ></div>
     </div>
-
     <div class="relative w-full max-w-md">
       <div class="text-center mb-8">
         <div class="inline-flex items-center space-x-3 mb-4">
