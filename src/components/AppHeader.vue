@@ -1,9 +1,19 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
+import { useRoute } from 'vue-router'
 import { Button } from '@/components/ui/button'
+import { RouterLink } from 'vue-router'
+
+const navItems = [
+  { to: '/', label: 'Home', mobileBulletColor: 'blue-500' },
+  { to: '/features', label: 'Fitur', mobileBulletColor: 'emerald-500' },
+  { to: '/products', label: 'Produk', mobileBulletColor: 'violet-500' },
+  { to: '/contact', label: 'Kontak', mobileBulletColor: 'orange-500' },
+]
 
 const isMobileMenuOpen = ref(false)
 const isScrolled = ref(false)
+const route = useRoute()
 
 const toggleMobileMenu = () => {
   isMobileMenuOpen.value = !isMobileMenuOpen.value
@@ -45,55 +55,40 @@ onUnmounted(() => {
         </div>
       </div>
       <nav class="hidden lg:flex space-x-1">
-        <a
-          href="#hero"
-          class="group relative px-4 py-2 rounded-lg font-medium text-gray-700 hover:text-blue-600 transition-all duration-300"
+        <RouterLink
+          v-for="item in navItems"
+          :key="item.to"
+          :to="item.to"
+          class="group relative px-4 py-2 rounded-lg font-medium transition-all duration-300"
+          :class="[
+            route.path === item.to
+              ? 'text-blue-600 bg-blue-50'
+              : 'text-gray-700 hover:text-blue-600',
+          ]"
         >
-          <span class="relative z-10">Home</span>
+          <span class="relative z-10">{{ item.label }}</span>
           <div
             class="absolute inset-0 bg-blue-50 rounded-lg scale-0 group-hover:scale-100 transition-transform duration-300 ease-out"
+            :class="{ 'scale-100': route.path === item.to }"
           ></div>
-        </a>
-        <a
-          href="#features"
-          class="group relative px-4 py-2 rounded-lg font-medium text-gray-700 hover:text-blue-600 transition-all duration-300"
-        >
-          <span class="relative z-10">Fitur</span>
-          <div
-            class="absolute inset-0 bg-blue-50 rounded-lg scale-0 group-hover:scale-100 transition-transform duration-300 ease-out"
-          ></div>
-        </a>
-        <a
-          href="#products"
-          class="group relative px-4 py-2 rounded-lg font-medium text-gray-700 hover:text-blue-600 transition-all duration-300"
-        >
-          <span class="relative z-10">Produk</span>
-          <div
-            class="absolute inset-0 bg-blue-50 rounded-lg scale-0 group-hover:scale-100 transition-transform duration-300 ease-out"
-          ></div>
-        </a>
-        <a
-          href="#contact"
-          class="group relative px-4 py-2 rounded-lg font-medium text-gray-700 hover:text-blue-600 transition-all duration-300"
-        >
-          <span class="relative z-10">Kontak</span>
-          <div
-            class="absolute inset-0 bg-blue-50 rounded-lg scale-0 group-hover:scale-100 transition-transform duration-300 ease-out"
-          ></div>
-        </a>
+        </RouterLink>
       </nav>
       <div class="hidden lg:flex items-center space-x-3">
-        <Button
-          variant="outline"
-          class="font-medium border-gray-300 text-gray-700 hover:border-blue-300 hover:text-blue-600 hover:bg-blue-50 transition-all duration-300"
-        >
-          Masuk
-        </Button>
-        <Button
-          class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 font-semibold shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 transition-all duration-300"
-        >
-          Daftar Gratis
-        </Button>
+        <RouterLink to="/login">
+          <Button
+            variant="outline"
+            class="font-medium border-gray-300 text-gray-700 hover:border-blue-300 hover:text-blue-600 hover:bg-blue-50 transition-all duration-300"
+          >
+            Masuk
+          </Button>
+        </RouterLink>
+        <RouterLink to="/register">
+          <Button
+            class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 font-semibold shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 transition-all duration-300"
+          >
+            Daftar Gratis
+          </Button>
+        </RouterLink>
       </div>
       <button
         @click="toggleMobileMenu"
@@ -137,46 +132,27 @@ onUnmounted(() => {
         class="lg:hidden overflow-hidden bg-white/95 backdrop-blur-xl border-t border-gray-100/50"
       >
         <nav class="container mx-auto px-6 py-6 space-y-1">
-          <a
-            href="#hero"
+          <RouterLink
+            v-for="item in navItems"
+            :key="item.to"
+            :to="item.to"
             @click="toggleMobileMenu"
-            class="flex items-center space-x-3 px-4 py-3 rounded-xl font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-300"
+            class="flex items-center space-x-3 px-4 py-3 rounded-xl font-medium transition-all duration-300"
+            :class="[
+              route.path === item.to
+                ? 'text-blue-600 bg-blue-50'
+                : 'text-gray-700 hover:text-blue-600 hover:bg-blue-50',
+            ]"
           >
             <div
-              class="w-2 h-2 bg-blue-500 rounded-full opacity-0 hover:opacity-100 transition-opacity duration-300"
+              :class="[
+                'w-2 h-2 rounded-full transition-opacity duration-300',
+                'bg-' + item.mobileBulletColor,
+                route.path === item.to ? 'opacity-100' : 'opacity-0 hover:opacity-100',
+              ]"
             ></div>
-            <span>Home</span>
-          </a>
-          <a
-            href="#features"
-            @click="toggleMobileMenu"
-            class="flex items-center space-x-3 px-4 py-3 rounded-xl font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-300"
-          >
-            <div
-              class="w-2 h-2 bg-emerald-500 rounded-full opacity-0 hover:opacity-100 transition-opacity duration-300"
-            ></div>
-            <span>Fitur</span>
-          </a>
-          <a
-            href="#products"
-            @click="toggleMobileMenu"
-            class="flex items-center space-x-3 px-4 py-3 rounded-xl font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-300"
-          >
-            <div
-              class="w-2 h-2 bg-violet-500 rounded-full opacity-0 hover:opacity-100 transition-opacity duration-300"
-            ></div>
-            <span>Produk</span>
-          </a>
-          <a
-            href="#contact"
-            @click="toggleMobileMenu"
-            class="flex items-center space-x-3 px-4 py-3 rounded-xl font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-300"
-          >
-            <div
-              class="w-2 h-2 bg-orange-500 rounded-full opacity-0 hover:opacity-100 transition-opacity duration-300"
-            ></div>
-            <span>Kontak</span>
-          </a>
+            <span>{{ item.label }}</span>
+          </RouterLink>
           <div class="pt-4 border-t border-gray-100/50 space-y-3">
             <Button
               variant="outline"
