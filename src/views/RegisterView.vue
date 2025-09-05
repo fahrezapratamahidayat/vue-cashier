@@ -13,6 +13,9 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Alert, AlertDescription } from '@/components/ui/alert'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 // Form state
 const form = reactive({
@@ -107,8 +110,7 @@ const handleSubmit = async () => {
     if (Math.random() > 0.3) {
       success.value = 'Pendaftaran berhasil! Mengalihkan...'
       setTimeout(() => {
-        // Redirect to login or dashboard
-        console.log('Redirecting to login...')
+        router.push('/login')
       }, 1500)
     } else {
       throw new Error('Terjadi kesalahan saat mendaftar')
@@ -451,7 +453,7 @@ const handleFacebookSignup = () => {
               </p>
             </div>
             <div class="flex items-center space-x-2">
-              <Checkbox id="agreeTerms" v-model:checked="form.agreeTerms" :disabled="isLoading" />
+              <Checkbox id="agreeTerms" v-model="form.agreeTerms" />
               <Label for="agreeTerms" class="text-sm text-gray-600 cursor-pointer">
                 Saya setuju dengan
                 <a href="#" class="text-blue-600 hover:text-blue-700 transition-colors">
