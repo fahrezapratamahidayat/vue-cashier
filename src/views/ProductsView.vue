@@ -1,7 +1,62 @@
 <script setup lang="ts">
+import { ref, onMounted, computed } from 'vue'
 import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
 import AppHeader from '@/components/AppHeader.vue'
+import type { Product } from '@/types'
+import ProductCard from '@/components/ProductCard.vue'
+
+const products = ref<Product[]>([])
+const isLoading = ref<boolean>(true)
+const error = ref<string>('')
+const selectedCategory = ref<string>('All')
+const currentPage = ref<number>(1)
+const itemsPerPage = 10
+
+const fetchProducts = async () => {
+  try {
+    isLoading.value = true
+    const response = await fetch('https://api.escuelajs.co/api/v1/products')
+    if (!response.ok) {
+      throw new Error('Failed to fetch products')
+    }
+    const data = await response.json()
+    products.value = data
+  } catch (err) {
+    error.value = 'Gagal memuat produk. Silakan coba lagi nanti.'
+  } finally {
+    isLoading.value = false
+  }
+}
+
+const categories = computed(() => {
+  const cats = new Set(products.value.map((product) => product.category.name))
+  return ['All', ...Array.from(cats).sort()]
+})
+
+const filteredProducts = computed(() => {
+  if (selectedCategory.value === 'All') {
+    return products.value
+  }
+  return products.value.filter((product) => product.category.name === selectedCategory.value)
+})
+
+const paginatedProducts = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage
+  const end = start + itemsPerPage
+  return filteredProducts.value.slice(start, end)
+})
+
+const totalPages = computed(() => Math.ceil(filteredProducts.value.length / itemsPerPage))
+
+const changePage = (page: number) => {
+  if (page >= 1 && page <= totalPages.value) {
+    currentPage.value = page
+  }
+}
+
+onMounted(() => {
+  fetchProducts()
+})
 </script>
 
 <template>
@@ -32,26 +87,20 @@ import AppHeader from '@/components/AppHeader.vue'
           </p>
         </div>
         <div class="flex flex-col sm:flex-row justify-between items-center mb-12 gap-4">
-          <div class="flex gap-4">
+          <div class="flex gap-4 flex-wrap">
             <Button
+              v-for="category in categories"
+              :key="category"
               variant="outline"
-              class="border-2 border-gray-200 hover:bg-gray-50 text-gray-900 font-semibold"
+              class="border-2 font-semibold flex items-center"
+              :class="[
+                selectedCategory === category
+                  ? 'bg-blue-50 text-blue-600 border-blue-300'
+                  : 'border-gray-200 text-gray-900 hover:bg-gray-50',
+              ]"
+              @click="((selectedCategory = category), (currentPage = 1))"
             >
-              Kategori
-              <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M19 9l-7 7-7-7"
-                />
-              </svg>
-            </Button>
-            <Button
-              variant="outline"
-              class="border-2 border-gray-200 hover:bg-gray-50 text-gray-900 font-semibold"
-            >
-              Urutkan
+              {{ category }}
               <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   stroke-linecap="round"
@@ -63,88 +112,61 @@ import AppHeader from '@/components/AppHeader.vue'
             </Button>
           </div>
           <p class="text-gray-600 text-sm">
-            Menampilkan <span class="font-semibold">1-12</span> dari
-            <span class="font-semibold">50 produk</span>
+            Menampilkan <span class="font-semibold">{{ filteredProducts.length }}</span> produk
           </p>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
-          <Card
-            v-for="i in 12"
-            :key="i"
-            class="group overflow-hidden border-0 shadow-sm hover:shadow-2xl transition-all duration-500 hover:scale-105 bg-white"
-          >
-            <div class="relative overflow-hidden">
-              <div
-                class="w-full h-56 bg-gradient-to-br from-gray-100 to-gray-200 relative overflow-hidden"
-              >
-                <div
-                  class="absolute inset-0 bg-gradient-to-br from-blue-400/20 to-purple-400/20"
-                ></div>
-                <div class="absolute inset-0 flex items-center justify-center">
-                  <div class="text-6xl text-gray-300">📦</div>
-                </div>
-                <div
-                  class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300"
-                ></div>
-                <div
-                  class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300"
-                >
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    class="bg-white/90 backdrop-blur-sm hover:bg-white"
-                  >
-                    👁️
-                  </Button>
-                </div>
-              </div>
-            </div>
-            <div class="p-6">
-              <div class="flex items-start justify-between mb-3">
-                <h3
-                  class="text-lg font-bold text-gray-900 group-hover:text-blue-600 transition-colors"
-                >
-                  Produk Premium {{ i }}
-                </h3>
-                <div class="flex text-yellow-400">⭐⭐⭐⭐⭐</div>
-              </div>
-              <p class="text-gray-600 mb-4 text-sm leading-relaxed">
-                Deskripsi produk berkualitas tinggi dengan fitur unggulan
-              </p>
-              <div class="flex items-center justify-between mb-4">
-                <div>
-                  <span class="text-2xl font-bold text-gray-900">Rp 150.000</span>
-                  <span class="text-sm text-gray-500 line-through ml-2">Rp 200.000</span>
-                </div>
-                <div class="text-xs bg-red-100 text-red-600 px-2 py-1 rounded-full font-semibold">
-                  -25%
-                </div>
-              </div>
-              <Button
-                size="sm"
-                class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 font-semibold transition-all duration-300 shadow-md hover:shadow-lg"
-              >
-                Tambah ke Keranjang
-              </Button>
-            </div>
-          </Card>
+        <div v-if="isLoading" class="text-center py-12">
+          <div class="inline-flex items-center gap-2 text-gray-600">
+            <div
+              class="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"
+            ></div>
+            <span class="text-lg">Memuat produk...</span>
+          </div>
         </div>
-        <div class="flex justify-center mt-12">
+        <div v-else-if="error" class="text-center py-12">
+          <p class="text-red-600 text-lg font-medium">{{ error }}</p>
+          <Button
+            variant="outline"
+            class="mt-4 border-2 border-gray-200 hover:bg-gray-50 text-gray-900 font-semibold"
+            @click="fetchProducts"
+          >
+            Coba Lagi
+          </Button>
+        </div>
+        <div v-else-if="filteredProducts.length === 0" class="text-center py-12">
+          <p class="text-gray-600 text-lg font-medium">
+            Tidak ada produk ditemukan untuk kategori ini.
+          </p>
+          <Button
+            variant="outline"
+            class="mt-4 border-2 border-gray-200 hover:bg-gray-50 text-gray-900 font-semibold"
+            @click="selectedCategory = 'All'"
+          >
+            Lihat Semua Produk
+          </Button>
+        </div>
+        <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mx-auto">
+          <ProductCard v-for="product in paginatedProducts" :key="product.id" :product="product" />
+        </div>
+        <div v-if="filteredProducts.length > 0" class="flex justify-center mt-12">
           <div class="flex gap-2">
             <Button
               variant="outline"
               size="sm"
               class="border-2 border-gray-200 hover:bg-gray-50 text-gray-900"
+              :disabled="currentPage === 1"
+              @click="changePage(currentPage - 1)"
             >
               Sebelumnya
             </Button>
             <Button
-              v-for="n in 3"
+              v-for="n in totalPages"
               :key="n"
               variant="outline"
               size="sm"
               class="border-2 border-gray-200 hover:bg-gray-50 text-gray-900"
-              :class="{ 'bg-blue-50 text-blue-600': n === 1 }"
+              :class="{ 'bg-blue-50 text-blue-600': n === currentPage }"
+              @click="changePage(n)"
             >
               {{ n }}
             </Button>
@@ -152,6 +174,8 @@ import AppHeader from '@/components/AppHeader.vue'
               variant="outline"
               size="sm"
               class="border-2 border-gray-200 hover:bg-gray-50 text-gray-900"
+              :disabled="currentPage === totalPages"
+              @click="changePage(currentPage + 1)"
             >
               Selanjutnya
             </Button>
