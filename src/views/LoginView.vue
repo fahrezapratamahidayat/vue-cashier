@@ -13,7 +13,9 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { RouterLink } from 'vue-router'
+import { RouterLink, useRouter } from 'vue-router'
+
+const router = useRouter()
 
 // Form state
 const form = reactive({
@@ -79,8 +81,7 @@ const handleSubmit = async () => {
     if (Math.random() > 0.3) {
       success.value = 'Login berhasil! Mengalihkan...'
       setTimeout(() => {
-        // Redirect to dashboard or home
-        console.log('Redirecting to dashboard...')
+        router.push('/')
       }, 1500)
     } else {
       throw new Error('Email atau password salah')
