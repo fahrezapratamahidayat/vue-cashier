@@ -23,6 +23,11 @@ const handleScroll = () => {
   isScrolled.value = window.scrollY > 20
 }
 
+const isActive = (to: string) => {
+  if (to === '/') return route.path === '/'
+  return route.path.startsWith(to)
+}
+
 onMounted(() => {
   window.addEventListener('scroll', handleScroll)
 })
@@ -60,11 +65,9 @@ onUnmounted(() => {
           :key="item.to"
           :to="item.to"
           class="group relative px-4 py-2 rounded-lg font-medium transition-all duration-300"
-          :class="[
-            route.path === item.to
-              ? 'text-blue-600 bg-blue-50'
-              : 'text-gray-700 hover:text-blue-600',
-          ]"
+          :class="
+            isActive(item.to) ? 'text-blue-600 bg-blue-50' : 'text-gray-700 hover:text-blue-600'
+          "
         >
           <span class="relative z-10">{{ item.label }}</span>
           <div
