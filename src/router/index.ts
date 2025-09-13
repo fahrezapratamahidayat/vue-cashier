@@ -4,6 +4,8 @@ import NotFoundView from '@/views/NotFoundView.vue'
 import ProductsDetailsView from '@/views/ProductsDetailsView.vue'
 import ProductsView from '@/views/ProductsView.vue'
 import RegisterView from '@/views/RegisterView.vue'
+import FeaturesView from '@/views/FeaturesView.vue'
+import ContactView from '@/views/ContactView.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
@@ -35,6 +37,18 @@ const router = createRouter({
       name: 'productDetails',
       component: ProductsDetailsView,
       props: true,
+    },
+    {
+      path: '/features',
+      name: 'features',
+      component: FeaturesView,
+      meta: { title: 'Features Page', requiresAuth: false },
+    },
+    {
+      path: '/contact',
+      name: 'contact',
+      component: ContactView,
+      meta: { title: 'Contact Page', requiresAuth: false },
     },
     {
       path: '/:pathMatch(.*)*',
