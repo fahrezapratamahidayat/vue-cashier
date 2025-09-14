@@ -13,7 +13,7 @@ const form = ref({
   company: '',
   subject: '',
   message: '',
-  inquiryType: 'general'
+  inquiryType: 'general',
 })
 
 const isSubmitting = ref(false)
@@ -27,7 +27,7 @@ const contactMethods = [
     value: '+62 21 1234 5678',
     action: 'tel:+622112345678',
     gradient: 'from-blue-500 to-indigo-600',
-    bgGradient: 'from-white to-blue-50/30'
+    bgGradient: 'from-white to-blue-50/30',
   },
   {
     icon: '✉️',
@@ -36,7 +36,7 @@ const contactMethods = [
     value: 'support@tokovue.com',
     action: 'mailto:support@tokovue.com',
     gradient: 'from-emerald-500 to-teal-600',
-    bgGradient: 'from-white to-emerald-50/30'
+    bgGradient: 'from-white to-emerald-50/30',
   },
   {
     icon: '💬',
@@ -45,7 +45,7 @@ const contactMethods = [
     value: '+62 812 3456 7890',
     action: 'https://wa.me/6281234567890',
     gradient: 'from-green-500 to-emerald-600',
-    bgGradient: 'from-white to-green-50/30'
+    bgGradient: 'from-white to-green-50/30',
   },
   {
     icon: '📍',
@@ -54,27 +54,31 @@ const contactMethods = [
     value: 'Jl. Sudirman No. 123, Jakarta',
     action: 'https://maps.google.com',
     gradient: 'from-violet-500 to-purple-600',
-    bgGradient: 'from-white to-violet-50/30'
-  }
+    bgGradient: 'from-white to-violet-50/30',
+  },
 ]
 
 const faqItems = [
   {
     question: 'Bagaimana cara memulai menggunakan TokoVue?',
-    answer: 'Anda dapat memulai dengan mendaftar trial gratis 14 hari. Setelah registrasi, tim kami akan membantu setup awal dan training penggunaan sistem.'
+    answer:
+      'Anda dapat memulai dengan mendaftar trial gratis 14 hari. Setelah registrasi, tim kami akan membantu setup awal dan training penggunaan sistem.',
   },
   {
     question: 'Apakah data saya aman di TokoVue?',
-    answer: 'Ya, kami menggunakan enkripsi tingkat enterprise dan backup otomatis. Data Anda disimpan di server cloud yang aman dengan sertifikasi internasional.'
+    answer:
+      'Ya, kami menggunakan enkripsi tingkat enterprise dan backup otomatis. Data Anda disimpan di server cloud yang aman dengan sertifikasi internasional.',
   },
   {
     question: 'Bisakah TokoVue terintegrasi dengan sistem yang sudah ada?',
-    answer: 'TokoVue menyediakan API dan berbagai integrasi dengan marketplace, payment gateway, dan sistem akuntansi populer di Indonesia.'
+    answer:
+      'TokoVue menyediakan API dan berbagai integrasi dengan marketplace, payment gateway, dan sistem akuntansi populer di Indonesia.',
   },
   {
     question: 'Berapa biaya berlangganan TokoVue?',
-    answer: 'Kami menawarkan paket mulai dari Rp 99.000/bulan dengan berbagai fitur. Hubungi tim sales untuk konsultasi paket yang sesuai kebutuhan bisnis Anda.'
-  }
+    answer:
+      'Kami menawarkan paket mulai dari Rp 99.000/bulan dengan berbagai fitur. Hubungi tim sales untuk konsultasi paket yang sesuai kebutuhan bisnis Anda.',
+  },
 ]
 
 const openLink = (url: string) => {
@@ -83,13 +87,13 @@ const openLink = (url: string) => {
 
 const submitForm = async () => {
   isSubmitting.value = true
-  
+
   // Simulate API call
-  await new Promise(resolve => setTimeout(resolve, 2000))
-  
+  await new Promise((resolve) => setTimeout(resolve, 2000))
+
   isSubmitting.value = false
   isSubmitted.value = true
-  
+
   // Reset form after 3 seconds
   setTimeout(() => {
     isSubmitted.value = false
@@ -100,7 +104,7 @@ const submitForm = async () => {
       company: '',
       subject: '',
       message: '',
-      inquiryType: 'general'
+      inquiryType: 'general',
     }
   }, 3000)
 }
@@ -109,29 +113,39 @@ const submitForm = async () => {
 <template>
   <div class="min-h-screen bg-gradient-to-br from-slate-50 to-white font-sans">
     <AppHeader />
-    
+
     <!-- Hero Section -->
     <section class="relative overflow-hidden bg-white pt-24">
       <div class="absolute inset-0 bg-gradient-to-br from-blue-50/30 to-indigo-50/30"></div>
-      <div class="absolute top-20 right-20 w-72 h-72 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-full blur-3xl opacity-30"></div>
-      <div class="absolute bottom-20 left-20 w-96 h-96 bg-gradient-to-br from-violet-100 to-purple-100 rounded-full blur-3xl opacity-20"></div>
-      
+      <div
+        class="absolute top-20 right-20 w-72 h-72 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-full blur-3xl opacity-30"
+      ></div>
+      <div
+        class="absolute bottom-20 left-20 w-96 h-96 bg-gradient-to-br from-violet-100 to-purple-100 rounded-full blur-3xl opacity-20"
+      ></div>
+
       <div class="relative container mx-auto text-center px-6 py-20 md:py-32">
         <div class="max-w-4xl mx-auto">
-          <div class="inline-flex items-center gap-2 bg-blue-50 text-blue-700 px-4 py-2 rounded-full text-sm font-medium mb-8 border border-blue-100">
+          <div
+            class="inline-flex items-center gap-2 bg-blue-50 text-blue-700 px-4 py-2 rounded-full text-sm font-medium mb-8 border border-blue-100"
+          >
             <div class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
             Hubungi Tim Kami
           </div>
 
-          <h1 class="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight tracking-tight">
+          <h1
+            class="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight tracking-tight"
+          >
             Mari Bicara Tentang
-            <span class="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+            <span
+              class="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent"
+            >
               Bisnis Anda
             </span>
           </h1>
 
           <p class="text-xl text-gray-600 mb-12 max-w-3xl mx-auto leading-relaxed">
-            Tim ahli kami siap membantu Anda memilih solusi terbaik untuk mengembangkan bisnis. 
+            Tim ahli kami siap membantu Anda memilih solusi terbaik untuk mengembangkan bisnis.
             Konsultasi gratis dan tanpa komitmen.
           </p>
 
@@ -173,18 +187,20 @@ const submitForm = async () => {
             :key="method.title"
             :class="[
               'group p-6 border-0 shadow-sm hover:shadow-2xl transition-all duration-500 cursor-pointer hover:scale-105 text-center',
-              `bg-gradient-to-br ${method.bgGradient}`
+              `bg-gradient-to-br ${method.bgGradient}`,
             ]"
             @click="() => openLink(method.action)"
           >
             <div class="text-5xl mb-4 group-hover:scale-110 transition-transform duration-300">
               {{ method.icon }}
             </div>
-            
-            <h3 class="text-xl font-bold mb-2 text-gray-900 group-hover:text-blue-600 transition-colors">
+
+            <h3
+              class="text-xl font-bold mb-2 text-gray-900 group-hover:text-blue-600 transition-colors"
+            >
               {{ method.title }}
             </h3>
-            
+
             <p class="text-gray-600 text-sm mb-3">
               {{ method.description }}
             </p>
@@ -193,11 +209,13 @@ const submitForm = async () => {
               {{ method.value }}
             </p>
 
-            <div :class="[
-              'w-12 h-1 mx-auto mt-4 rounded-full transition-all duration-300',
-              `bg-gradient-to-r ${method.gradient}`,
-              'group-hover:w-16'
-            ]"></div>
+            <div
+              :class="[
+                'w-12 h-1 mx-auto mt-4 rounded-full transition-all duration-300',
+                `bg-gradient-to-r ${method.gradient}`,
+                'group-hover:w-16',
+              ]"
+            ></div>
           </Card>
         </div>
       </div>
@@ -210,9 +228,7 @@ const submitForm = async () => {
           <!-- Contact Form -->
           <div>
             <div class="mb-8">
-              <h2 class="text-3xl font-bold text-gray-900 mb-4">
-                Kirim Pesan
-              </h2>
+              <h2 class="text-3xl font-bold text-gray-900 mb-4">Kirim Pesan</h2>
               <p class="text-gray-600">
                 Isi form di bawah ini dan tim kami akan merespons dalam 24 jam
               </p>
@@ -222,7 +238,9 @@ const submitForm = async () => {
               <form @submit.prevent="submitForm" class="space-y-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label for="name" class="text-sm font-semibold text-gray-700">Nama Lengkap *</Label>
+                    <Label for="name" class="text-sm font-semibold text-gray-700"
+                      >Nama Lengkap *</Label
+                    >
                     <Input
                       id="name"
                       v-model="form.name"
@@ -247,7 +265,9 @@ const submitForm = async () => {
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label for="phone" class="text-sm font-semibold text-gray-700">Nomor Telepon</Label>
+                    <Label for="phone" class="text-sm font-semibold text-gray-700"
+                      >Nomor Telepon</Label
+                    >
                     <Input
                       id="phone"
                       v-model="form.phone"
@@ -257,7 +277,9 @@ const submitForm = async () => {
                     />
                   </div>
                   <div>
-                    <Label for="company" class="text-sm font-semibold text-gray-700">Nama Perusahaan</Label>
+                    <Label for="company" class="text-sm font-semibold text-gray-700"
+                      >Nama Perusahaan</Label
+                    >
                     <Input
                       id="company"
                       v-model="form.company"
@@ -269,7 +291,9 @@ const submitForm = async () => {
                 </div>
 
                 <div>
-                  <Label for="inquiryType" class="text-sm font-semibold text-gray-700">Jenis Pertanyaan</Label>
+                  <Label for="inquiryType" class="text-sm font-semibold text-gray-700"
+                    >Jenis Pertanyaan</Label
+                  >
                   <select
                     id="inquiryType"
                     v-model="form.inquiryType"
@@ -313,15 +337,15 @@ const submitForm = async () => {
                   class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 font-semibold py-3 shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 transition-all duration-300 disabled:opacity-50"
                 >
                   <span v-if="isSubmitting" class="flex items-center justify-center gap-2">
-                    <div class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    <div
+                      class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"
+                    ></div>
                     Mengirim...
                   </span>
                   <span v-else-if="isSubmitted" class="flex items-center justify-center gap-2">
                     ✓ Pesan Terkirim!
                   </span>
-                  <span v-else>
-                    Kirim Pesan
-                  </span>
+                  <span v-else> Kirim Pesan </span>
                 </Button>
               </form>
             </Card>
@@ -331,14 +355,14 @@ const submitForm = async () => {
           <div class="space-y-8">
             <!-- Company Info -->
             <div>
-              <h3 class="text-2xl font-bold text-gray-900 mb-6">
-                Informasi Perusahaan
-              </h3>
-              
+              <h3 class="text-2xl font-bold text-gray-900 mb-6">Informasi Perusahaan</h3>
+
               <Card class="p-6 shadow-lg border-0 bg-gradient-to-br from-white to-blue-50/30">
                 <div class="space-y-4">
                   <div class="flex items-start gap-3">
-                    <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
+                    <div
+                      class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-1"
+                    >
                       <span class="text-blue-600">🏢</span>
                     </div>
                     <div>
@@ -346,9 +370,11 @@ const submitForm = async () => {
                       <p class="text-gray-600 text-sm">Jl. Sudirman No. 123, Jakarta Pusat 10110</p>
                     </div>
                   </div>
-                  
+
                   <div class="flex items-start gap-3">
-                    <div class="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
+                    <div
+                      class="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-1"
+                    >
                       <span class="text-emerald-600">⏰</span>
                     </div>
                     <div>
@@ -357,9 +383,11 @@ const submitForm = async () => {
                       <p class="text-gray-600 text-sm">Sabtu: 09:00 - 15:00 WIB</p>
                     </div>
                   </div>
-                  
+
                   <div class="flex items-start gap-3">
-                    <div class="w-8 h-8 bg-violet-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
+                    <div
+                      class="w-8 h-8 bg-violet-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-1"
+                    >
                       <span class="text-violet-600">🎯</span>
                     </div>
                     <div>
@@ -374,10 +402,8 @@ const submitForm = async () => {
 
             <!-- FAQ -->
             <div>
-              <h3 class="text-2xl font-bold text-gray-900 mb-6">
-                Pertanyaan Umum
-              </h3>
-              
+              <h3 class="text-2xl font-bold text-gray-900 mb-6">Pertanyaan Umum</h3>
+
               <div class="space-y-4">
                 <Card
                   v-for="faq in faqItems"
@@ -399,7 +425,9 @@ const submitForm = async () => {
     </section>
 
     <!-- CTA Section -->
-    <section class="py-20 bg-gradient-to-br from-blue-600 to-indigo-700 text-center relative overflow-hidden">
+    <section
+      class="py-20 bg-gradient-to-br from-blue-600 to-indigo-700 text-center relative overflow-hidden"
+    >
       <div class="absolute inset-0 bg-grid-white/10"></div>
       <div class="absolute top-20 right-20 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
       <div class="absolute bottom-20 left-20 w-72 h-72 bg-white/5 rounded-full blur-3xl"></div>
