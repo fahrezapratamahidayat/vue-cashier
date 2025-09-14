@@ -14,8 +14,10 @@ import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { RouterLink, useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
 
 const router = useRouter()
+const authStore = useAuthStore()
 
 // Form state
 const form = reactive({
@@ -74,20 +76,18 @@ const handleSubmit = async () => {
   error.value = ''
 
   try {
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-
-    // Simulate success/error randomly for demo
-    if (Math.random() > 0.3) {
+    const result = await authStore.login(form.email, form.password)
+    
+    if (result.success) {
       success.value = 'Login berhasil! Mengalihkan...'
       setTimeout(() => {
         router.push('/')
       }, 1500)
     } else {
-      throw new Error('Email atau password salah')
+      throw new Error(result.error || 'Login gagal')
     }
-  } catch (err: any) {
-    error.value = err.message || 'Terjadi kesalahan, silakan coba lagi'
+  } catch (err) {
+    error.value = err instanceof Error ? err.message : 'Terjadi kesalahan, silakan coba lagi'
   } finally {
     isLoading.value = false
   }
