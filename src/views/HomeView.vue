@@ -287,7 +287,153 @@ import AppHeader from '@/components/AppHeader.vue'
         </div>
       </div>
     </section>
-    <div class="h-20 bg-white"></div>
+
+    <!-- Footer -->
+    <footer class="bg-gradient-to-br from-gray-900 to-gray-800 text-white">
+      <div class="container mx-auto px-6 py-16">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <!-- Company Info -->
+          <div class="space-y-4">
+            <div class="flex items-center space-x-3">
+              <div class="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
+                <span class="text-white font-bold text-lg">T</span>
+              </div>
+              <div class="text-2xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+                TokoVue
+              </div>
+            </div>
+            <p class="text-gray-400 leading-relaxed">
+              Solusi POS dan manajemen bisnis terdepan untuk UMKM Indonesia. Transformasi digital yang mudah dan terjangkau.
+            </p>
+            <div class="flex space-x-4">
+              <a href="#" class="w-10 h-10 bg-gray-800 hover:bg-blue-600 rounded-lg flex items-center justify-center transition-colors duration-300">
+                <span class="text-lg">📘</span>
+              </a>
+              <a href="#" class="w-10 h-10 bg-gray-800 hover:bg-blue-600 rounded-lg flex items-center justify-center transition-colors duration-300">
+                <span class="text-lg">📷</span>
+              </a>
+              <a href="#" class="w-10 h-10 bg-gray-800 hover:bg-blue-600 rounded-lg flex items-center justify-center transition-colors duration-300">
+                <span class="text-lg">🐦</span>
+              </a>
+              <a href="#" class="w-10 h-10 bg-gray-800 hover:bg-blue-600 rounded-lg flex items-center justify-center transition-colors duration-300">
+                <span class="text-lg">💼</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Product -->
+          <div class="space-y-4">
+            <h3 class="text-lg font-semibold text-white">Produk</h3>
+            <ul class="space-y-2">
+              <li><RouterLink to="/features" class="text-gray-400 hover:text-white transition-colors duration-300">Fitur Lengkap</RouterLink></li>
+              <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">POS System</a></li>
+              <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Inventory Management</a></li>
+              <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Analytics Dashboard</a></li>
+              <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Multi-Channel</a></li>
+              <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Mobile App</a></li>
+            </ul>
+          </div>
+
+          <!-- Support -->
+          <div class="space-y-4">
+            <h3 class="text-lg font-semibold text-white">Dukungan</h3>
+            <ul class="space-y-2">
+              <li><RouterLink to="/contact" class="text-gray-400 hover:text-white transition-colors duration-300">Hubungi Kami</RouterLink></li>
+              <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Pusat Bantuan</a></li>
+              <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Tutorial</a></li>
+              <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">API Documentation</a></li>
+              <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Status System</a></li>
+              <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Community Forum</a></li>
+            </ul>
+          </div>
+
+          <!-- Company -->
+          <div class="space-y-4">
+            <h3 class="text-lg font-semibold text-white">Perusahaan</h3>
+            <ul class="space-y-2">
+              <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Tentang Kami</a></li>
+              <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Karir</a></li>
+              <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Blog</a></li>
+              <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Press Kit</a></li>
+              <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Kemitraan</a></li>
+              <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Investor</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Newsletter -->
+        <div class="border-t border-gray-700 mt-12 pt-8">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+            <div>
+              <h3 class="text-xl font-semibold text-white mb-2">
+                Dapatkan Update Terbaru
+              </h3>
+              <p class="text-gray-400">
+                Berlangganan newsletter kami untuk tips bisnis dan update produk terbaru
+              </p>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-3">
+              <input
+                type="email"
+                placeholder="Masukkan email Anda"
+                class="flex-1 px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+              <Button class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 px-6 py-3 font-semibold whitespace-nowrap">
+                Berlangganan
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Footer -->
+        <div class="border-t border-gray-700 mt-8 pt-8">
+          <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="text-gray-400 text-sm">
+              © 2024 TokoVue. All rights reserved.
+            </div>
+            <div class="flex flex-wrap gap-6 text-sm">
+              <a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Privacy Policy</a>
+              <a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Terms of Service</a>
+              <a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Cookie Policy</a>
+              <a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Sitemap</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact Info -->
+        <div class="mt-8 pt-8 border-t border-gray-700">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                <span class="text-white">📞</span>
+              </div>
+              <div>
+                <div class="text-gray-400">Telepon</div>
+                <div class="text-white font-medium">+62 21 1234 5678</div>
+              </div>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 bg-emerald-600 rounded-lg flex items-center justify-center">
+                <span class="text-white">✉️</span>
+              </div>
+              <div>
+                <div class="text-gray-400">Email</div>
+                <div class="text-white font-medium">support@tokovue.com</div>
+              </div>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 bg-violet-600 rounded-lg flex items-center justify-center">
+                <span class="text-white">📍</span>
+              </div>
+              <div>
+                <div class="text-gray-400">Alamat</div>
+                <div class="text-white font-medium">Jakarta, Indonesia</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
   </div>
 </template>
 
