@@ -3,6 +3,8 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { Button } from '@/components/ui/button'
 import { RouterLink } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
+import { useCartStore } from '@/stores/cart'
 
 const navItems = [
   { to: '/', label: 'Home', mobileBulletColor: 'blue-500' },
@@ -14,6 +16,10 @@ const navItems = [
 const isMobileMenuOpen = ref(false)
 const isScrolled = ref(false)
 const route = useRoute()
+const authStore = useAuthStore()
+const cartStore = useCartStore()
+const showUserDropdown = ref(false)
+const showCartDropdown = ref(false)
 
 const toggleMobileMenu = () => {
   isMobileMenuOpen.value = !isMobileMenuOpen.value
@@ -28,12 +34,38 @@ const isActive = (to: string) => {
   return route.path.startsWith(to)
 }
 
+const toggleUserDropdown = () => {
+  showUserDropdown.value = !showUserDropdown.value
+}
+
+const toggleCartDropdown = () => {
+  showCartDropdown.value = !showCartDropdown.value
+}
+
+const handleLogout = () => {
+  authStore.logout()
+  showUserDropdown.value = false
+}
+
+// Close dropdowns when clicking outside
+const handleClickOutside = (event: Event) => {
+  const target = event.target as Element
+  if (!target.closest('.cart-dropdown') && !target.closest('.cart-button')) {
+    showCartDropdown.value = false
+  }
+  if (!target.closest('.user-dropdown') && !target.closest('.user-button')) {
+    showUserDropdown.value = false
+  }
+}
+
 onMounted(() => {
   window.addEventListener('scroll', handleScroll)
+  document.addEventListener('click', handleClickOutside)
 })
 
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll)
+  document.removeEventListener('click', handleClickOutside)
 })
 </script>
 
@@ -77,21 +109,128 @@ onUnmounted(() => {
         </RouterLink>
       </nav>
       <div class="hidden lg:flex items-center space-x-3">
-        <RouterLink to="/login">
-          <Button
-            variant="outline"
-            class="font-medium border-gray-300 text-gray-700 hover:border-blue-300 hover:text-blue-600 hover:bg-blue-50 transition-all duration-300"
+        <!-- Cart Icon -->
+        <div class="relative">
+          <button 
+            @click="toggleCartDropdown"
+            class="cart-button p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200 relative"
           >
-            Masuk
-          </Button>
-        </RouterLink>
-        <RouterLink to="/register">
-          <Button
-            class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 font-semibold shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 transition-all duration-300"
+            <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.5 6M7 13l-1.5 6m0 0h9M17 13v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6"></path>
+            </svg>
+            <!-- Cart Badge -->
+            <span v-if="cartStore.totalItems > 0" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">
+              {{ cartStore.totalItems }}
+            </span>
+          </button>
+          
+          <!-- Cart Dropdown -->
+          <div v-if="showCartDropdown" class="cart-dropdown absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
+            <div class="px-4 py-2 border-b border-gray-100">
+              <h3 class="font-semibold text-gray-900">Keranjang Belanja</h3>
+              <p class="text-sm text-gray-500">{{ cartStore.totalItems }} item</p>
+            </div>
+            
+            <div v-if="cartStore.items.length === 0" class="px-4 py-8 text-center text-gray-500">
+              <svg class="w-12 h-12 mx-auto mb-2 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.5 6M7 13l-1.5 6m0 0h9M17 13v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6"></path>
+              </svg>
+              <p>Keranjang kosong</p>
+            </div>
+            
+            <div v-else class="max-h-64 overflow-y-auto">
+              <div v-for="item in cartStore.items" :key="item.id" class="px-4 py-3 border-b border-gray-50 hover:bg-gray-50">
+                <div class="flex items-center space-x-3">
+                  <img :src="item.image" :alt="item.title" class="w-12 h-12 rounded-lg object-cover">
+                  <div class="flex-1 min-w-0">
+                    <p class="text-sm font-medium text-gray-900 truncate">{{ item.title }}</p>
+                    <p class="text-sm text-gray-500">Qty: {{ item.quantity }}</p>
+                  </div>
+                  <div class="text-right">
+                    <p class="text-sm font-medium text-gray-900">
+                      Rp {{ (item.price * item.quantity).toLocaleString('id-ID') }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div v-if="cartStore.items.length > 0" class="px-4 py-3 border-t border-gray-100">
+              <div class="flex justify-between items-center mb-3">
+                <span class="font-semibold text-gray-900">Total:</span>
+                <span class="font-bold text-lg text-blue-600">
+                  Rp {{ cartStore.totalPrice.toLocaleString('id-ID') }}
+                </span>
+              </div>
+              <RouterLink to="/checkout">
+                <button class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium">
+                  Checkout Sekarang
+                </button>
+              </RouterLink>
+            </div>
+          </div>
+        </div>
+
+        <!-- User Authentication -->
+        <div v-if="authStore.isAuthenticated" class="relative">
+          <!-- User Profile Dropdown -->
+          <button 
+            @click="toggleUserDropdown"
+            class="user-button flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200"
           >
-            Daftar Gratis
-          </Button>
-        </RouterLink>
+            <img 
+              :src="authStore.user?.avatar || 'https://placehold.co/32x32'" 
+              :alt="authStore.user?.name"
+              class="w-8 h-8 rounded-full border-2 border-gray-200"
+            >
+            <span class="text-sm font-medium text-gray-700">{{ authStore.user?.name }}</span>
+            <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </button>
+          
+          <!-- Dropdown Menu -->
+          <div v-if="showUserDropdown" class="user-dropdown absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
+            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+              👤 Profil Saya
+            </a>
+            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+              🛒 Keranjang ({{ cartStore.totalItems }})
+            </a>
+            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+              ❤️ Wishlist
+            </a>
+            <RouterLink to="/orders" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+              📦 Pesanan Saya
+            </RouterLink>
+            <div class="border-t border-gray-100 my-1"></div>
+            <button 
+              @click="handleLogout"
+              class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+            >
+              🚪 Keluar
+            </button>
+          </div>
+        </div>
+
+        <!-- Login/Register buttons when not authenticated -->
+        <div v-else class="flex items-center space-x-3">
+          <RouterLink to="/login">
+            <Button
+              variant="outline"
+              class="font-medium border-gray-300 text-gray-700 hover:border-blue-300 hover:text-blue-600 hover:bg-blue-50 transition-all duration-300"
+            >
+              Masuk
+            </Button>
+          </RouterLink>
+          <RouterLink to="/register">
+            <Button
+              class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 font-semibold shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 transition-all duration-300"
+            >
+              Daftar Gratis
+            </Button>
+          </RouterLink>
+        </div>
       </div>
       <button
         @click="toggleMobileMenu"
