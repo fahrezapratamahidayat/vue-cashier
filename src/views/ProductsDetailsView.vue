@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import { ref, onMounted, watchEffect } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import AppHeader from '@/components/AppHeader.vue'
 import { RouterLink } from 'vue-router'
 import ProductCard from '@/components/ProductCard.vue'
+import { useCartStore } from '@/stores/cart'
+import { useAuthStore } from '@/stores/auth'
+import { useWishlistStore } from '@/stores/wishlist'
 
 interface Category {
   id: number
@@ -25,11 +28,19 @@ interface Product {
 }
 
 const route = useRoute()
+const router = useRouter()
+const cartStore = useCartStore()
+const authStore = useAuthStore()
+const wishlistStore = useWishlistStore()
+
 const product = ref<Product | null>(null)
 const relatedProducts = ref<Product[]>([])
 const isLoading = ref<boolean>(true)
 const error = ref<string>('')
 const currentImageIndex = ref<number>(0)
+const showToast = ref<boolean>(false)
+const toastMessage = ref<string>('')
+const toastType = ref<'success' | 'error' | 'info'>('success')
 
 // Fetch product by slug
 const fetchProduct = async () => {
@@ -46,7 +57,7 @@ const fetchProduct = async () => {
       throw new Error('Product not found')
     }
     product.value = data
-  } catch (err) {
+  } catch {
     error.value = 'Gagal memuat produk. Silakan coba lagi nanti.'
   } finally {
     isLoading.value = false
@@ -80,6 +91,46 @@ const nextImage = () => {
 const prevImage = () => {
   if (currentImageIndex.value > 0) {
     currentImageIndex.value--
+  }
+}
+
+// Toast functionality
+const showToastMessage = (message: string, type: 'success' | 'error' | 'info' = 'success') => {
+  toastMessage.value = message
+  toastType.value = type
+  showToast.value = true
+  setTimeout(() => {
+    showToast.value = false
+  }, 3000)
+}
+
+// Cart functionality
+const addToCart = () => {
+  if (product.value) {
+    cartStore.addToCart(product.value)
+    showToastMessage('Produk berhasil ditambahkan ke keranjang!', 'success')
+  }
+}
+
+// Wishlist functionality
+const addToWishlist = () => {
+  if (!authStore.isAuthenticated) {
+    showToastMessage('Silakan login terlebih dahulu untuk menambahkan ke wishlist', 'error')
+    // Redirect to login page after 2 seconds
+    setTimeout(() => {
+      router.push('/login')
+    }, 2000)
+    return
+  }
+  
+  if (product.value) {
+    if (wishlistStore.isInWishlist(product.value.id)) {
+      wishlistStore.removeFromWishlist(product.value.id)
+      showToastMessage('Produk dihapus dari wishlist', 'info')
+    } else {
+      wishlistStore.addToWishlist(product.value)
+      showToastMessage('Produk berhasil ditambahkan ke wishlist!', 'success')
+    }
   }
 }
 
@@ -218,16 +269,23 @@ watchEffect(() => {
             <div class="flex flex-col sm:flex-row gap-4 mb-8">
               <Button
                 size="lg"
+                @click="addToCart"
                 class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 px-8 py-4 text-lg font-semibold shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 transition-all duration-300"
               >
-                Tambah ke Keranjang
+                🛒 Tambah ke Keranjang
               </Button>
               <Button
                 variant="outline"
                 size="lg"
-                class="px-8 py-4 text-lg font-semibold border-2 hover:bg-gray-50 transition-all duration-300"
+                @click="addToWishlist"
+                :class="[
+                  'px-8 py-4 text-lg font-semibold border-2 transition-all duration-300',
+                  wishlistStore.isInWishlist(product.id) 
+                    ? 'bg-red-50 border-red-300 text-red-600 hover:bg-red-100' 
+                    : 'hover:bg-gray-50'
+                ]"
               >
-                Tambah ke Wishlist
+                {{ wishlistStore.isInWishlist(product.id) ? '❤️ Hapus dari Wishlist' : '🤍 Tambah ke Wishlist' }}
               </Button>
             </div>
             <div class="text-gray-600 text-sm">
@@ -360,6 +418,33 @@ watchEffect(() => {
       </div>
     </section>
   </div>
+
+  <!-- Toast Notification -->
+  <Transition
+    enter-active-class="transition-all duration-300 ease-out"
+    enter-from-class="opacity-0 translate-y-2"
+    enter-to-class="opacity-100 translate-y-0"
+    leave-active-class="transition-all duration-200 ease-in"
+    leave-from-class="opacity-100 translate-y-0"
+    leave-to-class="opacity-0 translate-y-2"
+  >
+    <div
+      v-if="showToast"
+      :class="[
+        'fixed top-4 right-4 z-50 px-6 py-4 rounded-lg shadow-lg max-w-sm',
+        toastType === 'success' ? 'bg-green-500 text-white' : 
+        toastType === 'error' ? 'bg-red-500 text-white' : 
+        'bg-blue-500 text-white'
+      ]"
+    >
+      <div class="flex items-center gap-3">
+        <span class="text-xl">
+          {{ toastType === 'success' ? '✅' : toastType === 'error' ? '❌' : 'ℹ️' }}
+        </span>
+        <p class="font-medium">{{ toastMessage }}</p>
+      </div>
+    </div>
+  </Transition>
 </template>
 
 <style scoped>
