@@ -6,6 +6,8 @@ import ProductsView from '@/views/ProductsView.vue'
 import RegisterView from '@/views/RegisterView.vue'
 import FeaturesView from '@/views/FeaturesView.vue'
 import ContactView from '@/views/ContactView.vue'
+import CheckoutView from '@/views/CheckoutView.vue'
+import OrdersView from '@/views/OrdersView.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
@@ -49,6 +51,18 @@ const router = createRouter({
       name: 'contact',
       component: ContactView,
       meta: { title: 'Contact Page', requiresAuth: false },
+    },
+    {
+      path: '/checkout',
+      name: 'checkout',
+      component: CheckoutView,
+      meta: { title: 'Checkout', requiresAuth: true },
+    },
+    {
+      path: '/orders',
+      name: 'orders',
+      component: OrdersView,
+      meta: { title: 'Pesanan Saya', requiresAuth: true },
     },
     {
       path: '/:pathMatch(.*)*',
